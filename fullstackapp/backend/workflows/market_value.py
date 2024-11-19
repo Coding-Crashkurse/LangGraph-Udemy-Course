@@ -30,27 +30,26 @@ def get_market_value(player_name: str):
     )
 
 
-tools_market_value = [get_market_value]
-model_market_value = ChatOpenAI(model="gpt-4o-mini").bind_tools(tools_market_value)
+def create_market_value_agent():
+    tools_market_value = [get_market_value]
+    model_market_value = ChatOpenAI(model="gpt-4o-mini").bind_tools(tools_market_value)
 
+    def call_model_market_value(state: OverallState):
+        local_messages = state.get("messages", [])
+        if not local_messages:
+            human_message = HumanMessage(content=state["article"])
+            local_messages.append(human_message)
+        system_message = SystemMessage(
+            content="You are an agent tasked with determining the market value of a player."
+        )
+        response = model_market_value.invoke([system_message] + local_messages)
+        state["agent_output"] = response.content
+        state["messages"] = local_messages + [response]
+        return state
 
-def call_model_market_value(state: OverallState):
-    local_messages = state.get("messages", [])
-    if not local_messages:
-        human_message = HumanMessage(content=state["article"])
-        local_messages.append(human_message)
-    system_message = SystemMessage(
-        content="You are an agent tasked with determining the market value of a player."
-    )
-    response = model_market_value.invoke([system_message] + local_messages)
-    state["agent_output"] = response.content
-    state["messages"] = local_messages + [response]
-    return state
+    market_value_graph = StateGraph(OverallState, input=InputState, output=OutputState)
+    market_value_graph.add_node("call_model_market_value", call_model_market_value)
+    market_value_graph.add_edge(START, "call_model_market_value")
+    market_value_graph.add_edge("call_model_market_value", END)
 
-
-market_value_graph = StateGraph(OverallState, input=InputState, output=OutputState)
-market_value_graph.add_node("call_model_market_value", call_model_market_value)
-market_value_graph.add_edge(START, "call_model_market_value")
-market_value_graph.add_edge("call_model_market_value", END)
-
-market_value_researcher_agent = market_value_graph.compile()
+    return market_value_graph.compile()
