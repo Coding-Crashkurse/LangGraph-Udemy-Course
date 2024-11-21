@@ -22,7 +22,7 @@ def create_text_writer_agent():
     def expand_text_to_100_words(state: OverallState):
         human_message = HumanMessage(content=state["article"])
         system_message = SystemMessage(
-            content="Expand the following text to be at least 100 words. Maintain the original meaning while adding detail."
+            content="Expand the following text to be at least 100 words. Maintain the original meaning while adding detail. Treat the original text as credible source. Just expand the text, no interpretation or anything else!"
         )
         response = model_text_writer.invoke([system_message, human_message])
         state["agent_output"] = response.content

@@ -44,5 +44,5 @@ class HumanWorkflow:
             checkpointer=self.checkpointer, interrupt_after=["newsagent_node"]
         )
 
-    def invoke(self, state: InputState):
-        return self.workflow.invoke(state)
+    def invoke(self, *args, **kwargs):
+        return self.workflow.invoke(*args, **kwargs)
