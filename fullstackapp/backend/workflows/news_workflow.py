@@ -11,6 +11,9 @@ from .text_writer import create_text_writer_agent
 class ArticlePostabilityGrader(BaseModel):
     """Binary scores for verifying if an article mentions market value, current club, and meets the minimum word count of 100 words."""
 
+    off_or_ontopic: str = Field(
+        description="The Article is about football transfers, 'yes' or 'no'"
+    )
     mentions_market_value: str = Field(
         description="The article mentions the player's market value, 'yes' or 'no'"
     )
@@ -28,6 +31,7 @@ class InputArticleState(TypedDict):
 
 class OutputFinalArticleState(TypedDict):
     final_article: str
+    off_or_ontopic: str
 
 
 class SharedArticleState(InputArticleState, OutputFinalArticleState):
@@ -47,11 +51,13 @@ class NewsWorkflow:
     def _create_postability_grader(self):
         prompt_template = """
         You are a grader assessing whether a news article meets the following criteria:
+        1. The article is about football transfers or not. If yes answer, answer with 'yes', anotherwise with 'no'.
         1. The article explicitly mentions the player's market value, for example, by stating "market value" or a specific currency amount (e.g., "$50 million"). If this is present, respond with 'yes' for mentions_market_value; otherwise, respond 'no'.
         2. The article mentions the player's current club or indicates that the current club information is unavailable (e.g., "Current club information not available"). If this is present, respond with 'yes' for mentions_current_club; otherwise, respond 'no'.
         3. The article contains at least 100 words. If this is met, respond with 'yes' for meets_100_words; otherwise, respond 'no'.
 
-        Provide three binary scores ('yes' or 'no') as follows:
+        Provide four binary scores ('yes' or 'no') as follows:
+        - off_or_ontopic: 'yes' or 'no' depending on whether the article is related to football transfers or not.
         - mentions_market_value: 'yes' or 'no' depending on whether the article mentions the player's market value.
         - mentions_current_club: 'yes' or 'no' depending on whether the article mentions the player's current club or states that the information is unavailable.
         - meets_100_words: 'yes' or 'no' depending on whether the article has at least 100 words.
@@ -66,6 +72,7 @@ class NewsWorkflow:
     def update_article_state(self, state: SharedArticleState) -> SharedArticleState:
         news_chef = self._create_postability_grader()
         response = news_chef.invoke({"article": state["article"]})
+        state["off_or_ontopic"] = response.off_or_ontopic
         state["mentions_market_value"] = response.mentions_market_value
         state["mentions_current_club"] = response.mentions_current_club
         state["meets_100_words"] = response.meets_100_words
@@ -97,11 +104,17 @@ class NewsWorkflow:
     ) -> Literal[
         "market_value_researcher", "current_club_researcher", "word_count_rewriter", END
     ]:
+        if state["off_or_ontopic"] == "no":
+            return END
         if state["mentions_market_value"] == "no":
             next_node = "market_value_researcher"
         elif state["mentions_current_club"] == "no":
             next_node = "current_club_researcher"
-        elif state["meets_100_words"] == "no":
+        elif (
+            state["meets_100_words"] == "no"
+            and state["mentions_market_value"] == "yes"
+            and state["mentions_current_club"] == "yes"
+        ):
             next_node = "word_count_rewriter"
         else:
             next_node = END

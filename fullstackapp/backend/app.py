@@ -7,6 +7,7 @@ from sqlalchemy.orm import declarative_base, sessionmaker, Session
 from sqlalchemy_utils import database_exists, create_database
 from contextlib import asynccontextmanager
 from workflows.human_workflow import HumanWorkflow
+from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
 # Database URLs
@@ -70,6 +71,13 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:4200"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 class ThreadResponse(BaseModel):
@@ -94,8 +102,6 @@ class ChatResponse(BaseModel):
     question: Optional[str] = None
     answer: Optional[str] = None
     human_interrupted: bool
-    api_response: Optional[str] = None
-    status_code: Optional[int] = None
 
 
 class UpdateAnswerRequest(BaseModel):
@@ -183,13 +189,19 @@ def confirm(
     if not thread:
         raise HTTPException(status_code=400, detail="Thread ID does not exist.")
 
+    if not thread.question_asked:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Cannot confirm thread {thread_id} as no question has been asked.",
+        )
+
     response_state = human_workflow.invoke(
         input=None,
         config={"configurable": {"thread_id": thread_id}},
     )
 
     # Mark the thread as confirmed and update the answer
-    thread.confirmed = True
+    thread.confirmed = bool(response_state.get("confirmed"))
     thread.answer = response_state.get("answer")
     db.commit()
 

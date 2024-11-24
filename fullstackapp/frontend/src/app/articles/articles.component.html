@@ -1,0 +1,8 @@
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+    <div class="bg-white shadow-md rounded-lg overflow-hidden transform transition duration-500 hover:scale-105 hover:shadow-lg cursor-pointer"
+        *ngFor="let article of articles" (click)="viewArticle(article.thread_id)">
+        <div class="p-4">
+            <h3 class="text-xl font-bold text-gray-800">{{ article.question }}</h3>
+        </div>
+    </div>
+</div>

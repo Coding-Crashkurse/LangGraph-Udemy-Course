@@ -16,8 +16,7 @@ class IntermediateState(InputState):
 
 
 class FinalState(IntermediateState):
-    api_response: str
-    status_code: int
+    confirmed: str
 
 
 class HumanWorkflow:
@@ -42,21 +41,23 @@ class HumanWorkflow:
 
     def newsagent_node(self, state: IntermediateState) -> IntermediateState:
         response = self.app.invoke({"article": state["question"]})
-        state["answer"] = response["final_article"]
+        state["answer"] = response.get(
+            "final_article", "Article not relevant for news agency"
+        )
+        state["off_or_ontopic"] = response["off_or_ontopic"]
         return state
 
-    def api_call_node(self, state: FinalState) -> FinalState:
-        state["status_code"] = 200
-        state["api_response"] = f"API received answer: {state['answer']}"
+    def confirm_node(self, state: FinalState) -> FinalState:
+        state["confirmed"] = "true"
         return state
 
     def _create_workflow(self):
         workflow = StateGraph(FinalState, input=InputState, output=FinalState)
         workflow.add_node("newsagent_node", self.newsagent_node)
-        workflow.add_node("api_call_node", self.api_call_node)
+        workflow.add_node("confirm_node", self.confirm_node)
         workflow.set_entry_point("newsagent_node")
-        workflow.add_edge("newsagent_node", "api_call_node")
-        workflow.add_edge("api_call_node", END)
+        workflow.add_edge("newsagent_node", "confirm_node")
+        workflow.add_edge("confirm_node", END)
         return workflow.compile(
             checkpointer=self.checkpointer, interrupt_after=["newsagent_node"]
         )

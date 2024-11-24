@@ -1,0 +1,29 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.text-xl {
+  font-size: 1.25rem;
+}
+
+.text-gray-800 {
+  color: #2d3748;
+}
+
+.transition {
+  transition: all 0.3s ease-in-out;
+}
+
+.hover\:scale-105:hover {
+  transform: scale(1.05);
+}
+
+.hover\:shadow-lg:hover {
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
