@@ -1,25 +1,33 @@
 <table>
     <thead>
         <tr>
-            <th>Thread ID</th>
-            <th>Question</th>
-            <th>Answer</th>
-            <th>Status</th>
-            <th>Actions</th>
+            <th class="center-text">Original News</th>
+            <th class="center-text">Written Article</th>
+            <th class="center-text">Status</th>
+            <th class="center-text">Error</th>
+            <th class="center-text">Actions</th>
         </tr>
     </thead>
     <tbody>
         <tr *ngFor="let article of articles">
-            <td>{{ article.thread_id }}</td>
             <td>{{ article.question }}</td>
             <td>{{ article.answer }}</td>
             <td>
-                <span class="status-circle"
-                    [ngClass]="{ confirmed: article.confirmed, notConfirmed: !article.confirmed }"></span>
+                <span class="status-badge"
+                    [ngClass]="{ 'confirmed': article.confirmed, 'not-confirmed': !article.confirmed }">
+                    {{ article.confirmed ? 'Confirmed' : 'Not Confirmed' }}
+                </span>
             </td>
             <td>
-                <button (click)="confirmArticle(article.thread_id)">Confirm</button>
-                <button (click)="deleteArticle(article.thread_id)">Delete</button>
+                <span class="error-badge" [ngClass]="{ 'error-true': article.error, 'error-false': !article.error }">
+                    {{ article.error ? 'Error Occurred' : 'No Error' }}
+                </span>
+            </td>
+            <td>
+                <ng-container *ngIf="!article.confirmed">
+                    <button class="btn-confirm" (click)="confirmArticle(article.thread_id)">Confirm</button>
+                </ng-container>
+                <button class="btn-delete" (click)="deleteArticle(article.thread_id)">Delete</button>
             </td>
         </tr>
     </tbody>

@@ -1,4 +1,21 @@
-<div class="p-6 max-w-4xl mx-auto bg-white shadow-md rounded-lg">
-    <h1 class="text-3xl font-bold text-gray-800 mb-4">{{ article?.question }}</h1>
-    <p class="text-lg text-gray-700">{{ article?.answer }}</p>
+<div class="relative bg-cover bg-center min-h-screen text-white" style="background-image: url('/assets/ainews.JPG');">
+    <!-- Overlay to darken the background image -->
+    <div class="absolute inset-0 bg-black opacity-60"></div>
+
+    <!-- Content displayed on top of the background -->
+    <div class="relative z-10 flex items-center justify-center min-h-screen">
+        <div class="p-6 max-w-4xl bg-white bg-opacity-80 shadow-md rounded-lg text-center">
+            <h1 class="text-3xl font-bold text-gray-800 mb-4">{{ article?.question }}</h1>
+            <p class="text-lg text-gray-700">{{ article?.answer }}</p>
+        </div>
+    </div>
+
+    <!-- Back Button -->
+    <button
+        class="absolute bottom-4 left-4 px-4 py-2 bg-blue-700 text-white font-semibold rounded shadow-lg hover:bg-blue-800 hover:shadow-xl cursor-pointer transition duration-300 z-10"
+        (click)="goBack()">
+        Back
+    </button>
+
+
 </div>

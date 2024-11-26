@@ -12,7 +12,11 @@ export class AdminComponent implements OnInit {
   constructor(private apiService: ApiService) {} // Inject the ApiService
 
   async ngOnInit() {
-    this.articles = await this.apiService.listSessions(); // Use ApiService to fetch data
+    const allArticles = await this.apiService.listSessions(); // Use ApiService to fetch data
+    // Filter only articles with a question and an answer
+    this.articles = allArticles.filter(
+      (article) => article.question && article.answer
+    );
   }
 
   async deleteArticle(threadId: string) {

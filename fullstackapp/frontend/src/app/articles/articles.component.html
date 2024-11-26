@@ -1,8 +1,19 @@
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
-    <div class="bg-white shadow-md rounded-lg overflow-hidden transform transition duration-500 hover:scale-105 hover:shadow-lg cursor-pointer"
-        *ngFor="let article of articles" (click)="viewArticle(article.thread_id)">
-        <div class="p-4">
-            <h3 class="text-xl font-bold text-gray-800">{{ article.question }}</h3>
+<div class="relative bg-cover bg-center min-h-screen text-white"
+    style="background-image: url('/assets/robotagent.JPG');">
+    <!-- Overlay to gray out the image -->
+    <div class="absolute inset-0 bg-black opacity-50"></div>
+
+    <div class="relative z-10 text-center py-10">
+        <h1 class="text-4xl font-bold mb-4">AI Football News</h1>
+        <p class="text-lg">Get all the latest transfer news!</p>
+    </div>
+
+    <div class="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+        <div class="bg-white text-gray-800 shadow-md rounded-lg overflow-hidden transform transition duration-500 hover:scale-105 hover:shadow-lg cursor-pointer"
+            *ngFor="let article of articles" (click)="viewArticle(article.thread_id)">
+            <div class="p-4">
+                <h3 class="text-xl font-bold">{{ article.question }}</h3>
+            </div>
         </div>
     </div>
 </div>
