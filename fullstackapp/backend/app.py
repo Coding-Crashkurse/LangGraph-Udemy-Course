@@ -30,6 +30,7 @@ class Thread(Base):
     question = Column(String, nullable=True)  # Stores the question
     answer = Column(Text, nullable=True)  # Stores the answer
     confirmed = Column(Boolean, default=False)  # Indicates if the thread is confirmed
+    error = Column(Boolean, default=False)  # Indicates if there was an error
 
 
 def initialize_database():
@@ -86,6 +87,7 @@ class ThreadResponse(BaseModel):
     question: Optional[str] = None
     answer: Optional[str] = None
     confirmed: bool
+    error: bool
 
 
 class StartThreadResponse(BaseModel):
@@ -114,7 +116,9 @@ def start_thread(db: Session = Depends(get_db)):
     Starts a new conversation and generates a unique thread_id.
     """
     thread_id = str(uuid4())
-    new_thread = Thread(thread_id=thread_id, question_asked=False, confirmed=False)
+    new_thread = Thread(
+        thread_id=thread_id, question_asked=False, confirmed=False, error=False
+    )
     db.add(new_thread)
     db.commit()
     db.refresh(new_thread)
@@ -151,14 +155,16 @@ def ask_question(
 
     response_state = human_workflow.invoke(
         input={"question": request.question},
-        config={"configurable": {"thread_id": thread_id}},
+        # config={"configurable": {"thread_id": thread_id}},
+        config={"recursion_limit": 5, "configurable": {"thread_id": thread_id}},
         subgraphs=True,
     )
 
-    # Update thread with the question and answer
+    # Update thread with the question, answer, and error state
     thread.question_asked = True
     thread.question = request.question
     thread.answer = response_state[1].get("answer")
+    thread.error = response_state[1].get("error", False)
     db.commit()
 
     return ThreadResponse(
@@ -167,6 +173,7 @@ def ask_question(
         question=thread.question,
         answer=thread.answer,
         confirmed=thread.confirmed,
+        error=thread.error,
     )
 
 
@@ -211,33 +218,7 @@ def confirm(
         question=thread.question,
         answer=thread.answer,
         confirmed=thread.confirmed,
-    )
-
-
-@app.put("/update_answer", response_model=ThreadResponse)
-def update_answer(
-    thread_id: str,
-    request: UpdateAnswerRequest,
-    db: Session = Depends(get_db),
-):
-    """
-    Updates the answer for a specific thread.
-    """
-    thread = db.query(Thread).filter(Thread.thread_id == thread_id).first()
-
-    if not thread:
-        raise HTTPException(status_code=400, detail="Thread ID does not exist.")
-
-    # Update the answer
-    thread.answer = request.answer
-    db.commit()
-
-    return ThreadResponse(
-        thread_id=thread.thread_id,
-        question_asked=thread.question_asked,
-        question=thread.question,
-        answer=thread.answer,
-        confirmed=thread.confirmed,
+        error=thread.error,
     )
 
 
@@ -263,6 +244,7 @@ def delete_thread(
         question=thread.question,
         answer=thread.answer,
         confirmed=thread.confirmed,
+        error=thread.error,
     )
 
 
@@ -279,6 +261,7 @@ def list_sessions(db: Session = Depends(get_db)):
             question=thread.question,
             answer=thread.answer,
             confirmed=thread.confirmed,
+            error=thread.error,
         )
         for thread in threads
     ]

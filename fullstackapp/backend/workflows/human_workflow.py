@@ -13,6 +13,7 @@ class InputState(TypedDict):
 
 class IntermediateState(InputState):
     answer: str
+    error: bool
 
 
 class FinalState(IntermediateState):
@@ -40,11 +41,21 @@ class HumanWorkflow:
         return checkpointer
 
     def newsagent_node(self, state: IntermediateState) -> IntermediateState:
-        response = self.app.invoke({"article": state["question"]})
-        state["answer"] = response.get(
-            "final_article", "Article not relevant for news agency"
-        )
-        state["off_or_ontopic"] = response["off_or_ontopic"]
+        try:
+
+            response = self.app.invoke(
+                {"article": state["question"]},
+            )
+            state["answer"] = response.get(
+                "final_article", "Article not relevant for news agency"
+            )
+            state["off_or_ontopic"] = response["off_or_ontopic"]
+            state["error"] = False
+        except Exception as e:
+            state["answer"] = "Error occured while creating a message"
+            state["error"] = True
+            # Optionally log the exception for debugging
+            print(f"Error invoking newsagent_node: {e}")
         return state
 
     def confirm_node(self, state: FinalState) -> FinalState:

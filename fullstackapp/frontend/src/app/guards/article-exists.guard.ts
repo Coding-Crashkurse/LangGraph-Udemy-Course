@@ -18,11 +18,11 @@ export class ArticleExistsGuard implements CanActivate {
 
     try {
       // Use lastValueFrom to await the Observable
-      const article = await lastValueFrom(
-        this.apiService.getArticleById(threadId)
+      const session = await lastValueFrom(
+        this.apiService.getSessionById(threadId)
       );
-      if (article) {
-        return true; // Allow navigation if article exists
+      if (session) {
+        return true; // Allow navigation if session exists
       } else {
         this.router.navigate(['/404']);
         return false;

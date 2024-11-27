@@ -27,10 +27,12 @@ export class ApiService {
     return response.data;
   }
 
-  // Updated method to return an Observable
-  getArticleById(threadId: string): Observable<any> {
+  // Updated method to fetch a session by thread_id
+  getSessionById(threadId: string): Observable<any> {
     return from(
-      axios.get(`${this.baseUrl}/articles/${threadId}`).then((res) => res.data)
+      this.listSessions().then((sessions) =>
+        sessions.find((session) => session.thread_id === threadId)
+      )
     );
   }
 }
