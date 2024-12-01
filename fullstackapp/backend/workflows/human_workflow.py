@@ -3,8 +3,9 @@ from langgraph.graph import StateGraph, END
 from .news_workflow import NewsWorkflow
 from langgraph.checkpoint.postgres import PostgresSaver
 from psycopg_pool import ConnectionPool
+import os
 
-DB_URI = "postgresql://postgres:postgres@localhost:5433/postgres?sslmode=disable"
+DB_URI = "postgresql://postgres:postgres@postgres_local:5432/postgres"
 
 
 class InputState(TypedDict):

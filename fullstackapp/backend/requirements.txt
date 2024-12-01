@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+sqlalchemy
+sqlalchemy-utils
+langgraph
+langchain
+langgraph-checkpoint-postgres
+langchain-openai
+python-dotenv
+psycopg2-binary

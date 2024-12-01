@@ -19,15 +19,19 @@ export class ApiService {
 
   async confirmThread(threadId: string): Promise<any> {
     const response: AxiosResponse = await axios.post(
-      `${this.baseUrl}/confirm`,
-      {
-        config: { thread_id: threadId },
-      }
+      `${this.baseUrl}/confirm/${threadId}`
     );
     return response.data;
   }
 
-  // Updated method to fetch a session by thread_id
+  async editThread(threadId: string, answer: string): Promise<any> {
+    const response: AxiosResponse = await axios.patch(
+      `${this.baseUrl}/edit_state/${threadId}`,
+      { answer }
+    );
+    return response.data;
+  }
+
   getSessionById(threadId: string): Observable<any> {
     return from(
       this.listSessions().then((sessions) =>

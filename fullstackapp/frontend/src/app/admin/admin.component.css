@@ -1,4 +1,3 @@
-/* General table styling */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -17,7 +16,6 @@ th {
   font-weight: bold;
 }
 
-/* Status Badge Styling */
 .status-badge {
   display: inline-block;
   padding: 4px 8px;
@@ -38,48 +36,113 @@ th {
   color: #b22222;
   border: 1px solid #b22222;
 }
-/* General Button Styling */
+
 button {
   display: inline-block;
-  padding: 8px 16px; /* Uniform padding */
-  border: none;
+  padding: 8px 16px;
+  border: 2px solid transparent;
   border-radius: 4px;
   font-size: 14px;
   font-weight: bold;
   cursor: pointer;
   text-align: center;
-  width: 100px; /* Uniform width for consistency */
-  transition: background-color 0.3s ease;
-  margin: 4px 0; /* Add spacing between buttons */
+  width: 100px;
+  transition: all 0.3s ease;
+  margin: 4px 0;
 }
 
-/* Hover Effects */
-button:hover {
-  background-color: #f4f4f4;
-}
-
-/* Confirm Button Styling */
 .btn-confirm {
-  background-color: #4caf50; /* Green background */
-  color: white; /* White text */
+  background-color: white;
+  color: #4caf50;
+  border: 2px solid #4caf50;
 }
 
 .btn-confirm:hover {
-  background-color: #45a049; /* Darker green on hover */
+  background-color: #4caf50;
+  color: white;
 }
 
-/* Delete Button Styling */
 .btn-delete {
-  background-color: #f44336; /* Red background */
-  color: white; /* White text */
+  background-color: white;
+  color: #f44336;
+  border: 2px solid #f44336;
 }
 
 .btn-delete:hover {
-  background-color: #e53935; /* Darker red on hover */
+  background-color: #f44336;
+  color: white;
 }
 
-/* Centering Buttons in the Cell */
+.btn-edit {
+  background-color: white;
+  color: #007bff;
+  border: 2px solid #007bff;
+}
+
+.btn-edit:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-save {
+  background-color: white;
+  color: #17a2b8;
+  border: 2px solid #17a2b8;
+}
+
+.btn-save:hover {
+  background-color: #17a2b8;
+  color: white;
+}
+
+.btn-cancel {
+  background-color: white;
+  color: #6c757d;
+  border: 2px solid #6c757d;
+}
+
+.btn-cancel:hover {
+  background-color: #6c757d;
+  color: white;
+}
+
 td {
-  vertical-align: middle; /* Align text and buttons vertically in the middle */
-  text-align: center; /* Center-align text and buttons horizontally */
+  vertical-align: middle;
+  text-align: center;
+}
+
+.highlight-edit {
+  background-color: #fff7cc;
+  border: 2px solid #ffc107;
+  transition: background-color 0.3s ease, border 0.3s ease;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: flex-end;
+  padding: 16px;
+  background-color: #f8f9fa;
+}
+
+.btn-logout {
+  display: flex;
+  align-items: center;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-logout mat-icon {
+  margin-right: 8px;
+  font-size: 20px;
+}
+
+.btn-logout:hover {
+  background-color: #0056b3;
 }
