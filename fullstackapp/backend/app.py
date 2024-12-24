@@ -35,14 +35,13 @@ class Thread(Base):
 
 def initialize_database():
     with default_engine.connect() as connection:
-        result = connection.execute(
-            text("SELECT 1 FROM pg_database WHERE datname = 'threads_db'")
-        ).fetchone()
-        if not result:
-            connection.execution_options(isolation_level="AUTOCOMMIT").execute(
-                text("CREATE DATABASE threads_db")
-            )
-            print("Database threads_db created.")
+        with connection.execution_options(isolation_level="AUTOCOMMIT"):
+            result = connection.execute(
+                text("SELECT 1 FROM pg_database WHERE datname = 'threads_db'")
+            ).fetchone()
+            if not result:
+                connection.execute(text("CREATE DATABASE threads_db"))
+                print("Database threads_db created.")
 
 
 def ensure_tables():
