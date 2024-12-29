@@ -7,6 +7,7 @@ class Person(TypedDict):
 
 
 person: Person = {
-    "name": "Alice",
-    "age": "wrong",
+    "name": "John",
+    "Age": 50,
+    "job_title": "Manager",
 }  # Type-safe dictionary, static linters like mypy can detect this
