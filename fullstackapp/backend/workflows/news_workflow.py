@@ -1,8 +1,10 @@
-from typing import TypedDict, Literal
-from langgraph.graph import StateGraph, END
-from langchain_openai import ChatOpenAI
+from typing import Literal, TypedDict
+
 from langchain_core.prompts import ChatPromptTemplate
+from langchain_openai import ChatOpenAI
+from langgraph.graph import END, StateGraph
 from pydantic import BaseModel, Field
+
 from .current_club import create_current_club_agent
 from .market_value import create_market_value_agent
 from .text_writer import create_text_writer_agent
@@ -69,31 +71,35 @@ class NewsWorkflow:
             ArticlePostabilityGrader
         )
 
-    def update_article_state(self, state: SharedArticleState) -> SharedArticleState:
+    async def update_article_state(
+        self, state: SharedArticleState
+    ) -> SharedArticleState:
         news_chef = self._create_postability_grader()
-        response = news_chef.invoke({"article": state["article"]})
+        response = await news_chef.ainvoke({"article": state["article"]})
         state["off_or_ontopic"] = response.off_or_ontopic
         state["mentions_market_value"] = response.mentions_market_value
         state["mentions_current_club"] = response.mentions_current_club
         state["meets_100_words"] = response.meets_100_words
         return state
 
-    def market_value_researcher_node(
+    async def market_value_researcher_node(
         self, state: SharedArticleState
     ) -> SharedArticleState:
-        response = self.market_value_agent.invoke({"article": state["article"]})
+        response = await self.market_value_agent.ainvoke({"article": state["article"]})
         state["article"] += f" {response['agent_output']}"
         return state
 
-    def current_club_researcher_node(
+    async def current_club_researcher_node(
         self, state: SharedArticleState
     ) -> SharedArticleState:
-        response = self.current_club_agent.invoke({"article": state["article"]})
+        response = await self.current_club_agent.ainvoke({"article": state["article"]})
         state["article"] += f" {response['agent_output']}"
         return state
 
-    def word_count_rewriter_node(self, state: SharedArticleState) -> SharedArticleState:
-        response = self.text_writer_agent.invoke({"article": state["article"]})
+    async def word_count_rewriter_node(
+        self, state: SharedArticleState
+    ) -> SharedArticleState:
+        response = await self.text_writer_agent.ainvoke({"article": state["article"]})
         state["article"] += f" {response['agent_output']}"
         state["final_article"] = response["agent_output"]
         return state
@@ -145,5 +151,5 @@ class NewsWorkflow:
 
         return workflow.compile()
 
-    def invoke(self, *args, **kwargs):
-        return self.workflow.invoke(*args, **kwargs)
+    async def ainvoke(self, *args, **kwargs):
+        return await self.workflow.ainvoke(*args, **kwargs)

@@ -1,11 +1,12 @@
-from dotenv import load_dotenv
-from typing import TypedDict, Annotated, List, Literal
-from langchain_core.messages import HumanMessage, SystemMessage, BaseMessage
-from langgraph.graph import StateGraph, START, END
-from langgraph.prebuilt import ToolNode
-from langchain_openai import ChatOpenAI
-from langchain_core.tools import tool
 from operator import add
+from typing import Annotated, List, Literal, TypedDict
+
+from dotenv import load_dotenv
+from langchain_core.messages import BaseMessage, HumanMessage, SystemMessage
+from langchain_core.tools import tool
+from langchain_openai import ChatOpenAI
+from langgraph.graph import END, START, StateGraph
+from langgraph.prebuilt import ToolNode
 
 # Load environment variables
 load_dotenv()
@@ -39,8 +40,7 @@ def create_market_value_agent():
     tools_market_value = [get_market_value]
     model_market_value = ChatOpenAI(model="gpt-4o-mini").bind_tools(tools_market_value)
 
-    def call_model_market_value(state: OverallState):
-
+    async def call_model_market_value(state: OverallState):
         local_messages = state.get("messages", [])
         if not local_messages:
             human_message = HumanMessage(content=state["article"])
@@ -51,7 +51,7 @@ def create_market_value_agent():
 If the market value is mentioned, return it. Otherwise, return 'Market value information not available.'"""
         )
 
-        response = model_market_value.invoke([system_message] + local_messages)
+        response = await model_market_value.ainvoke([system_message] + local_messages)
 
         state["agent_output"] = response.content
         state["messages"] = local_messages + [response]

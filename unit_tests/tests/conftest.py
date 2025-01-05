@@ -1,8 +1,7 @@
 import pytest
+from code_to_test import AgentState
 from langchain_core.documents import Document
 from langchain_core.messages import HumanMessage
-
-from code_to_test import AgentState
 
 
 @pytest.fixture

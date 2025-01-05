@@ -33,6 +33,6 @@ services:
       dockerfile: Dockerfile
     container_name: angular_frontend
     ports:
-      - "8080:80"
+      - "5555:5555"
     environment:
       - NODE_ENV=production
