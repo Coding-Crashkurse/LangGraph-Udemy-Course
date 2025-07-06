@@ -61,7 +61,7 @@ If the current club is mentioned, return it. Otherwise, return 'Current club inf
             return "tools"
         return END
 
-    current_club_graph = StateGraph(OverallState, input=InputState, output=OutputState)
+    current_club_graph = StateGraph(state_schema=OverallState, input_schema=InputState, output_schema=OutputState)
     current_club_graph.add_node("call_model_current_club", call_model_current_club)
     current_club_graph.add_node("tools", ToolNode(tools_current_club))
     current_club_graph.add_edge(START, "call_model_current_club")

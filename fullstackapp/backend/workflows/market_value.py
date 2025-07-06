@@ -64,7 +64,7 @@ If the market value is mentioned, return it. Otherwise, return 'Market value inf
             return "tools"
         return END
 
-    market_value_graph = StateGraph(OverallState, input=InputState, output=OutputState)
+    market_value_graph = StateGraph(state_schema=OverallState, input_schema=InputState, output_schema=OutputState)
     market_value_graph.add_node("call_model_market_value", call_model_market_value)
     market_value_graph.add_node("tools", ToolNode(tools_market_value))
     market_value_graph.add_edge(START, "call_model_market_value")

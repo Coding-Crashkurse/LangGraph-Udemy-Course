@@ -29,7 +29,7 @@ def create_text_writer_agent():
         state["agent_output"] = response.content
         return state
 
-    text_writer_graph = StateGraph(OverallState, input=InputState, output=OutputState)
+    text_writer_graph = StateGraph(state_schema=OverallState, input_schema=InputState, output_schema=OutputState)
     text_writer_graph.add_node("expand_text_to_100_words", expand_text_to_100_words)
     text_writer_graph.add_edge(START, "expand_text_to_100_words")
     text_writer_graph.add_edge("expand_text_to_100_words", END)
