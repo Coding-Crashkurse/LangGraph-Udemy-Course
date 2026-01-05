@@ -7,46 +7,55 @@ This repository contains a collection of Jupyter notebooks and supporting projec
 - **00_TypedDict.ipynb**
   Explanation of the differences between `TypedDict` and Pydantic for managing state.
 
-- **Basics.ipynb**
+- **01_Basics.ipynb**
   Introduction to the basic concepts of LangGraph, including how to build simple agent workflows.
 
-- **Tool_calling_basics.ipynb**
+- **02_Tool_calling_basics.ipynb**
   Demonstrates how to enable agents to call tools effectively within LangChain (not LangGraph!).
 
-- **Agent_basics.ipynb**
+- **03_Agent_basics.ipynb**
   Explores the fundamental features of creating and managing agents using LangGraph.
 
-- **RAG_Basics.ipynb**
+- **04_RAG_Basics.ipynb**
   Overview of Retrieval-Augmented Generation (RAG) basics with LangGraph.
 
-- **RAG_Agent.ipynb**
+- **05_RAG_Agent.ipynb**
   Implementation of an agent that leverages RAG for enhanced information retrieval.
 
-- **RAG_Agent_with_memory.ipynb**
+- **06_RAG_Agent_with_memory.ipynb**
   Shows how to extend a RAG agent with memory capabilities for contextual responses.
 
-- **Advanced_State.ipynb**
+- **07_Advanced_State.ipynb**
   Advanced techniques for managing agent states within LangGraph workflows.
 
-- **Human_in_the_Loop.ipynb**
+- **08_Human_in_the_Loop.ipynb**
   Incorporates human input into LangGraph workflows for guided decision-making.
 
-- **ParallelExecution.ipynb**
+- **09_ParallelExecution.ipynb**
   Demonstrates parallel execution of nodes in LangGraph for efficient processing.
 
-- **AsyncAndStreaming.ipynb**
+- **10_AsyncAndStreaming.ipynb**
   Explores asynchronous execution and streaming outputs in LangGraph workflows.
 
-- **Subgraphs.ipynb**
+- **11_Subgraphs.ipynb**
   Illustrates how to use subgraphs to modularize and reuse parts of a workflow.
 
-- **Agent_Patterns.ipynb**
+- **12_Agent_Patterns.ipynb**
   Showcases common agent design patterns and reusable templates.
 
-- **LongTermMemory.ipynb**
+- **13_LongTermMemory.ipynb**
   Implements long-term memory functionality in agents using LangGraph.
 
+- **14_Durability_Memory.ipynb**
+  Covers durable memory patterns for long-lived LangGraph applications.
+
 ## Additional Content
+
+### scripts
+
+**Description**: Supporting Python scripts used alongside the notebooks.
+
+- **00_typeddict_with_mypy.py**: TypedDict example with type checking.
 
 ### unit_tests
 
