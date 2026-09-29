@@ -2,6 +2,22 @@
 
 This repository contains a collection of Jupyter notebooks and supporting projects showcasing the functionality of **LangGraph**, a Python library for building and managing agents with graph-based workflows.
 
+## Setup
+
+This project uses [uv](https://docs.astral.sh/uv/) for dependency management.
+
+```bash
+# install uv (see https://docs.astral.sh/uv/getting-started/installation/)
+uv sync                      # creates .venv and installs all dependencies
+cp .env.example .env         # then add your OPENAI_API_KEY
+```
+
+Select the `.venv` interpreter as the Jupyter kernel in your editor, or start Jupyter with `uv run --with jupyter jupyter lab`.
+
+- Run the unit tests: `cd unit_tests && uv run pytest`
+- Run the mypy example: `uv run mypy 00_typeddict_with_mypy.py`
+- `13_LongTermMemory.ipynb` needs PostgreSQL on port 5433: `docker compose -f fullstackapp/docker-compose.yaml up -d postgres`
+
 ## Notebooks
 
 - **00_TypedDict.ipynb**

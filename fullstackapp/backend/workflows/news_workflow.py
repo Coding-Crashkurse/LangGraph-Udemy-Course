@@ -128,7 +128,7 @@ class NewsWorkflow:
 
     def _create_workflow(self):
         workflow = StateGraph(
-            SharedArticleState, input=InputArticleState, output=OutputFinalArticleState
+            SharedArticleState, input_schema=InputArticleState, output_schema=OutputFinalArticleState
         )
         workflow.add_node("news_chef", self.update_article_state)
         workflow.add_node("market_value_researcher", self.market_value_researcher_node)
