@@ -29,7 +29,7 @@ class HumanWorkflow:
         self.workflow = self._create_workflow()
 
     def _create_workflow(self):
-        workflow = StateGraph(FinalState, input=InputState, output=FinalState)
+        workflow = StateGraph(FinalState, input_schema=InputState, output_schema=FinalState)
         workflow.add_node("newsagent_node", self.newsagent_node)
         workflow.add_node("confirm_node", self.confirm_node)
         workflow.set_entry_point("newsagent_node")

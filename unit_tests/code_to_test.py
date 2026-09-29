@@ -2,7 +2,7 @@ from typing import TypedDict
 
 from dotenv import load_dotenv
 from langchain_core.documents.base import Document
-from langchain_community.vectorstores import Chroma
+from langchain_chroma import Chroma
 from langchain_core.messages import AIMessage, BaseMessage
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.tools import tool
